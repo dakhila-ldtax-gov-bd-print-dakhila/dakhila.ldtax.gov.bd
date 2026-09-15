@@ -1,1 +1,633 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ভূমি উন্নয়ন কর পরিশোধের রশিদ</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+    margin:0;
+    padding:0;
+}
+
+body{
+    background:#efffe3;
+    color:#222;
+    font-family:"Noto Sans Bengali","SolaimanLipi","Nikosh",sans-serif;
+}
+
+.print-bar{
+    width:210mm;
+    min-width:210mm;
+    margin:0 auto;
+    padding:8px 0;
+    text-align:center;
+}
+
+.print-btn{
+    border:1px solid #777;
+    border-radius:5px;
+    background:#fff;
+    color:#222;
+    padding:7px 15px;
+    font-family:inherit;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.print-btn:active{
+    transform:scale(.98);
+}
+
+.page{
+    width:210mm;
+    min-width:210mm;
+    height:297mm;
+    min-height:297mm;
+    margin:0 auto;
+    padding:7mm 5mm;
+}
+
+.receipt{
+    position:relative;
+    width:200mm;
+    height:283mm;
+    min-height:283mm;
+    background:#fff;
+    border:1px dotted #888;
+    border-radius:3mm;
+    padding:3.5mm 3.2mm 8mm;
+    overflow:hidden;
+}
+
+/* ---------- header ---------- */
+.top{
+    position:relative;
+    min-height:27mm;
+}
+
+.form{
+    position:absolute;
+    left:0;
+    top:0;
+    width:38%;
+    font-size:13px;
+    line-height:1.35;
+}
+
+.serial{
+    position:absolute;
+    right:0;
+    top:0;
+    width:30%;
+    text-align:right;
+    font-size:12px;
+    line-height:1.6;
+}
+
+.title{
+    text-align:center;
+    padding-top:7mm;
+    font-size:18px;
+    line-height:1.35;
+}
+
+.subtitle{
+    font-size:13px;
+}
+
+/* ---------- dotted answer lines ---------- */
+.line{
+    border-bottom:1px dotted #888;
+    display:inline-block;
+    min-height:21px;
+    vertical-align:bottom;
+    padding:0 0 1px;
+}
+
+.full-line{
+    width:calc(100% - 2ch);
+    border-bottom:1px dotted #888;
+    min-height:21px;
+}
+
+/* ---------- information ---------- */
+.info{
+    font-size:13px;
+    line-height:1.45;
+}
+
+.office{
+    display:grid;
+    grid-template-columns:max-content minmax(0,1fr);
+    column-gap:5px;
+    align-items:end;
+    min-height:25px;
+}
+
+.office .answer{
+    border-bottom:1px dotted #888;
+    min-width:0;
+    width:100%;
+    min-height:22px;
+    padding:0 0 1px;
+}
+
+.location{
+    display:grid;
+    grid-template-columns:43% 34% 23%;
+    align-items:end;
+    min-height:26px;
+}
+
+.location .cell{
+    padding-right:5px;
+    white-space:nowrap;
+    display:grid;
+    grid-template-columns:max-content minmax(0,1fr);
+    column-gap:4px;
+    align-items:end;
+}
+
+.location .line{
+    width:100%;
+    min-width:0;
+}
+
+.holding{
+    display:block;
+    min-height:26px;
+    align-items:end;
+}
+
+.holding .cell{
+    width:100%;
+    padding-right:0;
+    display:grid;
+    grid-template-columns:max-content minmax(0,1fr);
+    column-gap:4px;
+    align-items:end;
+}
+
+.holding .cell.empty{
+    display:none;
+}
+
+.holding .line{
+    width:100%;
+    min-width:0;
+}
+
+.khatian{
+    min-height:25px;
+}
+
+.section-title{
+    text-align:center;
+    font-size:15px;
+    font-weight:600;
+    text-decoration:underline;
+    margin:2mm 0 2mm;
+}
+
+/* ---------- owner / land tables ---------- */
+.data-table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+    font-size:12px;
+}
+
+.data-table th,
+.data-table td{
+    border:1px dotted #888;
+    padding:3px 4px;
+    height:7.2mm;
+    text-align:center;
+    vertical-align:middle;
+}
+
+.owner-table th:nth-child(1){width:10%}
+.owner-table th:nth-child(2){width:64%}
+.owner-table th:nth-child(3){width:26%}
+
+.land-table th:nth-child(1){width:10%}
+.land-table th:nth-child(2){width:17%}
+.land-table th:nth-child(3){width:34%}
+.land-table th:nth-child(4){width:39%}
+
+.total-land{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+    margin-top:3mm;
+    font-size:12px;
+}
+
+.total-land td{
+    border:1px dotted #888;
+    height:7.2mm;
+    padding:3px 5px;
+}
+
+.total-land td:first-child{
+    width:50%;
+    text-align:center;
+}
+
+.total-land td:last-child{
+    width:50%;
+    text-align:right;
+    padding-right:5px;
+}
+
+/* ---------- collection ---------- */
+.collection{
+    margin-top:7mm;
+    border:1px solid #ddd;
+    padding:0;
+}
+
+.collection .section-title{
+    margin:0;
+    padding:2mm 0 2mm;
+}
+
+.collection-table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+    font-size:11px;
+}
+
+.collection-table th,
+.collection-table td{
+    border:1px solid #ddd;
+    text-align:center;
+    vertical-align:middle;
+    padding:2px 2px;
+}
+
+.collection-table th{
+    height:17mm;
+    font-weight:500;
+    line-height:1.45;
+}
+
+.collection-table td{
+    height:10mm;
+}
+
+.collection-table th:nth-child(1){width:20%}
+.collection-table th:nth-child(2){width:17%}
+.collection-table th:nth-child(3){width:20%}
+.collection-table th:nth-child(4){width:11%}
+.collection-table th:nth-child(5){width:11%}
+.collection-table th:nth-child(6){width:11%}
+.collection-table th:nth-child(7){width:11%}
+.collection-table th:nth-child(8){width:9%}
+
+/* ---------- total in words ---------- */
+.total-words{
+    width:calc(100% - 2ch);
+    min-height:9mm;
+    margin-top:1mm;
+    font-size:13px;
+    border-bottom:1px dotted #888;
+    padding:0 0 2px;
+    line-height:22px;
+}
+
+.total-words .answer{
+    display:inline;
+    border:0;
+    padding:0;
+}
+
+/* ---------- bottom ---------- */
+.bottom{
+    display:grid;
+    grid-template-columns:48% 24% 28%;
+    margin-top:3mm;
+    min-height:27mm;
+    align-items:start;
+    font-size:12px;
+}
+
+.note{
+    line-height:1.55;
+}
+
+.qr{
+    text-align:center;
+    padding-top:1mm;
+}
+
+.qr img{
+    width:24mm;
+    height:24mm;
+    object-fit:cover;
+    image-rendering:auto;
+}
+
+.notice{
+    text-align:center;
+    line-height:1.55;
+    padding-top:1mm;
+}
+
+.footer{
+    position:absolute;
+    right:3.5mm;
+    bottom:2mm;
+    font-size:11px;
+}
+
+/* ---------- print ---------- */
+@page{
+    size:A4 portrait;
+    margin:0;
+}
+
+
+/* =========================
+   মোবাইলে A4-কে শুধু স্কেল করা
+   হবে — ভেতরের কোনো লেআউট বদলাবে না
+========================= */
+@media screen and (max-width:600px){
+    html,body{
+        width:100%;
+        min-width:0;
+        overflow-x:hidden;
+    }
+
+    .print-bar{
+        width:100%;
+        min-width:0;
+        padding:8px 0;
+        text-align:center;
+    }
+
+    .page{
+        width:210mm !important;
+        min-width:210mm !important;
+        max-width:none !important;
+        height:297mm !important;
+        min-height:297mm !important;
+        margin-top:0 !important;
+        padding:7mm 5mm !important;
+        transform-origin:top left;
+        transform:scale(var(--mobile-scale,1));
+    }
+
+    .receipt{
+        width:200mm !important;
+        min-width:200mm !important;
+        max-width:none !important;
+        height:283mm !important;
+        min-height:283mm !important;
+    }
+}
+
+@media print{
+    .page{
+        transform:none !important;
+        margin-left:0 !important;
+        margin-bottom:0 !important;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="print-bar">
+    <button class="print-btn" type="button" onclick="window.print()">
+        🖨️ প্রিন্ট
+    </button>
+</div>
+
+<div class="page">
+<div class="receipt">
+
+    <div class="top">
+
+        <div class="form">
+            বাংলাদেশ ফরম নং ১০৭৭<br>
+            (সংশোধিত)
+        </div>
+
+        <div class="serial">
+            (পরিশিষ্টঃ ৩৮)<br>
+            ক্রমিক নং ২৬২৬২৬১৯১৬০১
+        </div>
+
+        <div class="title">
+            ভূমি উন্নয়ন কর পরিশোধের রশিদ<br>
+            <span class="subtitle">(অনুচ্ছেদ ৩৯২ দ্রষ্টব্য)</span>
+        </div>
+
+    </div>
+
+    <div class="info">
+
+        <div class="office">
+            <div>সিটি কর্পোরেশন/ পৌর/ ইউনিয়ন ভূমি অফিসের নাম:</div>
+            <div class="answer">গুলশান ভূমি অফিস</div>
+        </div>
+
+        <div class="location">
+            <div class="cell">
+                মৌজার নাম ও জে. এল. নং:
+                <span class="line">উত্তরা-৭৫</span>
+            </div>
+
+            <div class="cell">
+                উপজেলা/থানা:
+                <span class="line">উত্তরা</span>
+            </div>
+
+            <div class="cell">
+                জেলা:
+                <span class="line">ঢাকা</span>
+            </div>
+        </div>
+
+        <div class="holding">
+            <div class="cell">
+                ২ নং রেজিস্টার অনুযায়ী হোল্ডিং নম্বর:
+                <span class="line">১১/১১১</span>
+            </div>
+
+            <div class="cell empty"></div>
+        </div>
+
+        <div class="khatian">
+            <div style="
+                width:100%;
+                display:grid;
+                grid-template-columns:max-content minmax(0,1fr);
+                column-gap:4px;
+                align-items:end;
+            ">
+                <span>খতিয়ান নং:</span>
+                <span class="line" style="width:100%; min-width:0;">০৯৮৬</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="section-title">মালিকের বিবরণ</div>
+
+    <table class="data-table owner-table">
+        <thead>
+            <tr>
+                <th>ক্রমঃ</th>
+                <th>মালিকের নাম</th>
+                <th>মালিকের অংশ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>১</td>
+                <td style="text-align:left">কিস্টোন হোল্ডিং লিঃ</td>
+                <td>১</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">জমির বিবরণ</div>
+
+    <table class="data-table land-table">
+        <thead>
+            <tr>
+                <th>ক্রমঃ</th>
+                <th>দাগ নং</th>
+                <th>জমির শ্রেণি</th>
+                <th>জমির পরিমাণ (শতাংশ)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>১</td>
+                <td>১৭৮৬৫</td>
+                <td style="text-align:left">আবাসিক</td>
+                <td style="text-align:left">৮.২৫</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="total-land">
+        <tr>
+            <td>সর্বমোট জমি (শতাংশ)</td>
+            <td>৮.২৫</td>
+        </tr>
+    </table>
+
+    <div class="collection">
+
+        <div class="section-title">আদায়ের বিবরণ</div>
+
+        <table class="collection-table">
+            <thead>
+                <tr>
+                    <th>তিন বৎসরের উর্ধ্বের<br>বকেয়া</th>
+                    <th>গত তিন বৎসরের<br>বকেয়া</th>
+                    <th>বকেয়া জরিমানা ও<br>ক্ষতিপূরণ</th>
+                    <th>হাল<br>দাবি</th>
+                    <th>মোট<br>দাবি</th>
+                    <th>মোট<br>আদায়</th>
+                    <th>মোট<br>বকেয়া</th>
+                    <th>মন্তব্য</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>০</td>
+                    <td>০</td>
+                    <td>০</td>
+                    <td>২,৭০০</td>
+                    <td>২,৭০০</td>
+                    <td>২,৭০০</td>
+                    <td>০</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- সর্বমোট কথায়: পুরো লেখাটির নিচে একটানা ডটেড আন্ডারলাইন -->
+    <div class="total-words">
+        সর্বমোট (কথায়): দুই হাজার সাত শত টাকা মাত্র।
+    </div>
+
+    <div class="bottom">
+
+        <div class="note">
+            <b>নোট:</b> সর্বশেষ কর পরিশোধের সাল - ২০২৬-২০২৭ (অর্থবছর)<br>
+            চালান নং ১২৬২-০০০০৬৫৫৯০৪৮<br>
+            তারিখ: ৩০ আগস্ট ১৪৩৩<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            ১৪ জুলাই, ২০২৬
+        </div>
+
+        <div class="qr">
+  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAADFElEQVR4nO2by23jMBCGv1kK8JECUoBLkTtIScGWlA7MUlzAAtTRAIXZw5CW7Jyyzvql4cGAaH0wCY3n8Q8lyrdH+vV9BhxyyCGHHHLIodeEpI7OJmU3ipBEBMb6YWN3l+U5dHtoUFXVDKS+fUBQkW1BdgRVVdVz6HbLc+j20NgcwHDomJ++6qFD98DsQZ5mTw79EDSZbchHBiB8rU+fb08O/TuUtgVLISx+bI/yn37JoYeEWiSICowgxKCkHQCTQAwqwycsPcWD78mhH4CSiIj0WB4hHzkoQw7KcOgAJis17rU8h27tI2YHoKlHlBE0bY9iQcQ8yD2W59DNoVpXDFrQPUEZMug+FupcVIVY7D4b+wffk0PXQO1JZwB7+qqqOagZiM3ZfaXqFm4Rrwyd/vvFZAfVHLQKVlqW9jJk3CJWAJ3UqGChwx48sUYSG0Nu3sIt4uWhRR5h48IsiPUL3UfPI9YANYtosWLpCqhBpEaSjEeNFUAtasRqFq3gaHZAbEXIXHC4RbwytKw+LZWcvQU1VjT34BaxHkh/90Fh3KjsmIQknYkSdlList31FHty6Lq+BlOn6b0AhCLEjAwZBaaOtD2Kpj77+YgVQKfMEtMj6lwOra6gZhRVlPCosRYoqsoulqY9MIlIPwnEo8jOuqClGc2T7Mmha6CxA8aN1me+sI1Zyg4eNVYAnXWwYlWsawmqeqo6gnpfYyWQZZZC/NMxHASIpRMAZeztHnMN6T2r3Hp5Dt0cahIDcxd07mGUpl3noLp3hWoV0HmtEVrnO0NNJeOy4eEW8frQMo+Y1cs91SnM3YyabbpFvDrU8ggboShjb5cCGxUTrMa3AuPGa431QIPWMkNkq6qaJ7Hc4reds6yH7O61PIfukkfUjuep51VTiJMK4VFjFVB3cX2KH8pwqGFCGd+KDJ8eNdYIVc1y7JAdQOonMXk79dS5Z9uTQ98Zl+90YW3Pz0lIfahfJglF4fRex4PvyaFroMV74NCOStmwVDLOZ+5cj1gD9OWdruVVE6ygoN7pcsghhxxyyCGHzsdf0gCFLViU/8QAAAAASUVORK5CYII=" alt="QR Code">
+</div>
+
+        <div class="notice">
+            এই দাখিলা ইলেকট্রনিকভাবে তৈরি করা হয়েছে।<br>
+            কোন স্বাক্ষরের প্রয়োজন নেই।
+        </div>
+
+    </div>
+
+    <div class="footer">1/1</div>
+
+</div>
+</div>
+
+
+<script>
+(function(){
+    function fitA4OnMobile(){
+        var page = document.querySelector('.page');
+        if(!page) return;
+
+        if(window.matchMedia('(max-width: 600px)').matches){
+            /* A4 width = 210mm = 793.7008 CSS px at 96dpi */
+            var a4WidthPx = 210 / 25.4 * 96;
+            var available = Math.max(280, window.innerWidth - 10);
+            var scale = Math.min(1, available / a4WidthPx);
+
+            document.documentElement.style.setProperty('--mobile-scale', scale);
+
+            /* transform layout-এর জায়গা নেয় না, তাই নিচের অতিরিক্ত
+               জায়গাটুকু বাদ দেওয়া হচ্ছে */
+            var a4HeightPx = 297 / 25.4 * 96;
+            page.style.marginLeft = Math.max(0, (window.innerWidth - a4WidthPx * scale) / 2) + 'px';
+            page.style.marginBottom = -((a4HeightPx) * (1 - scale)) + 'px';
+        }else{
+            document.documentElement.style.setProperty('--mobile-scale', '1');
+            page.style.marginLeft = '';
+            page.style.marginBottom = '';
+        }
+    }
+
+    window.addEventListener('load', fitA4OnMobile);
+    window.addEventListener('resize', fitA4OnMobile);
+    window.addEventListener('orientationchange', function(){
+        setTimeout(fitA4OnMobile, 100);
+    });
+})();
+</script>
+
+</body>
+</html>
 
